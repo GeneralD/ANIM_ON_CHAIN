@@ -33,7 +33,13 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
 
     function initialize() public initializerERC721A initializer {
         __ERC721A_init("ANIM.JP", "AJP");
+        __ERC721ABurnable_init();
+        __ERC721AQueryable_init();
         __Ownable_init();
+
+        baseURI = "https://anim.jp/nfts/";
+        mintLimit = 9_999;
+        paused = false;
     }
 
     function _startTokenId() internal pure virtual override returns (uint256) {
@@ -44,7 +50,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     //// Base URI
     ///////////////////////////////////////////////////////////////////
 
-    string public baseURI = "https://anim.jp/nfts/";
+    string public baseURI;
 
     function _baseURI() internal view virtual override returns (string memory) {
         return baseURI;
@@ -88,7 +94,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         _mint(msg.sender, quantity);
     }
 
-    function adminMint(address to, uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
+    function adminMintTo(address to, uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
         _mint(to, quantity);
     }
 
@@ -96,7 +102,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     //// Minting Limit
     ///////////////////////////////////////////////////////////////////
 
-    uint256 public mintLimit = 9_999;
+    uint256 public mintLimit;
 
     function setMintLimit(uint256 _mintLimit) external onlyOwner {
         mintLimit = _mintLimit;
@@ -170,7 +176,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     event Paused(address account);
     event Unpaused(address account);
 
-    bool public paused = false;
+    bool public paused;
 
     function pause() external onlyOwner whenNotPaused {
         paused = true;
