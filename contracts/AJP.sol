@@ -15,17 +15,21 @@
 
 */
 
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.0;
+
+// @author Yumenosuke Kokata from ANIM.JP (CTO)
+// @title ANIM.JP NFT
 
 import "erc721a-upgradeable/contracts/ERC721AUpgradeable.sol";
 import "erc721a-upgradeable/contracts/extensions/ERC721ABurnableUpgradeable.sol";
 import "erc721a-upgradeable/contracts/extensions/ERC721AQueryableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
 
 contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryableUpgradeable, OwnableUpgradeable {
-
+    
     function initialize() public initializerERC721A initializer {
         __ERC721A_init("ANIM.JP", "AJP");
         __Ownable_init();
@@ -39,7 +43,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         return 1;
     }
 
-    function mint(uint256 quantity) external payable whenNotPaused {
+    function mint(uint256 quantity, bytes32[] calldata merkleProof) external payable whenNotPaused checkWhitelist(merkleProof) {
         _safeMint(msg.sender, quantity);
     }
 
@@ -49,6 +53,29 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
 
     function adminMint(address to, uint256 quantity) external payable onlyOwner {
         _mint(to, quantity);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Whitelist
+    ///////////////////////////////////////////////////////////////////
+
+    using MerkleProofUpgradeable for bytes32[];
+
+    bytes32 private _merkleRoot;
+
+    function setWhitelist(bytes32 merkleRoot) external onlyOwner {
+        _merkleRoot = merkleRoot;
+    }
+
+    modifier checkWhitelist(bytes32[] calldata merkleProof) {
+        require(
+            merkleProof.verify(
+                _merkleRoot,
+                keccak256(abi.encodePacked(msg.sender))
+            ),
+            "invalid merkle proof"
+        );
+        _;
     }
 
     ///////////////////////////////////////////////////////////////////
