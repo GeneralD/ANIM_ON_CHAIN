@@ -31,10 +31,6 @@ import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgrad
 contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryableUpgradeable, OwnableUpgradeable {
     using MerkleProofUpgradeable for bytes32[];
 
-    uint256 public constant WHITELISTED_OWNER_MINT_LIMIT = 20;
-    uint256 public constant WHITELIST_PRICE = .06 ether;
-    uint256 public constant PUBLIC_PRICE = .08 ether;
-
     function initialize() public initializerERC721A initializer {
         __ERC721A_init("ANIM.JP", "AJP");
         __Ownable_init();
@@ -62,13 +58,28 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     //// Minting Tokens
     ///////////////////////////////////////////////////////////////////
 
-    function whitelistMint(uint256 quantity, bytes32[] calldata merkleProof)
+    function whitelistMint(
+        uint256 quantity,
+        bool claimBonus,
+        bytes32[] calldata merkleProof
+    )
         external
         payable
         whenNotPaused
         checkMintLimit(quantity)
         checkWhitelist(merkleProof)
         checkWhitelistMintLimit(quantity)
+        checkPay(WHITELIST_PRICE, quantity)
+    {
+        _safeMint(msg.sender, claimBonus ? bonusQuantity(quantity) : quantity);
+    }
+
+    function publicMint(uint256 quantity)
+        external
+        payable
+        whenNotPaused
+        checkMintLimit(quantity)
+        checkPay(PUBLIC_PRICE, quantity)
     {
         _safeMint(msg.sender, quantity);
     }
@@ -82,20 +93,10 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     }
 
     ///////////////////////////////////////////////////////////////////
-    //// Withdraw
-    ///////////////////////////////////////////////////////////////////
-
-    // TODO: divide money peacefully
-    function withdraw() external onlyOwner {
-        uint256 amount = address(this).balance;
-        payable(msg.sender).transfer(amount);
-    }
-
-    ///////////////////////////////////////////////////////////////////
     //// Minting Limit
     ///////////////////////////////////////////////////////////////////
 
-    uint256 public mintLimit = 10_000;
+    uint256 public mintLimit = 9_999;
 
     function setMintLimit(uint256 _mintLimit) external onlyOwner {
         mintLimit = _mintLimit;
@@ -107,8 +108,22 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     }
 
     ///////////////////////////////////////////////////////////////////
+    //// Pricing
+    ///////////////////////////////////////////////////////////////////
+
+    uint256 public constant WHITELIST_PRICE = .06 ether;
+    uint256 public constant PUBLIC_PRICE = .08 ether;
+
+    modifier checkPay(uint256 price, uint256 quantity) {
+        require(msg.value >= price * quantity, "not enough eth");
+        _;
+    }
+
+    ///////////////////////////////////////////////////////////////////
     //// Whitelist
     ///////////////////////////////////////////////////////////////////
+
+    uint256 public constant WHITELISTED_OWNER_MINT_LIMIT = 100;
 
     bytes32 private _merkleRoot;
 
@@ -128,6 +143,24 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     modifier checkWhitelistMintLimit(uint256 quantity) {
         require(_numberMinted(msg.sender) + quantity <= WHITELISTED_OWNER_MINT_LIMIT, "WL minting exceeds the limit");
         _;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Whitelist Bonus
+    ///////////////////////////////////////////////////////////////////
+
+    uint256 public constant WHITELIST_BONUS_PER = 10;
+
+    /**
+     * @dev returns baseQuantity + bonus.
+     */
+    function bonusQuantity(uint256 baseQuantity) private view returns (uint256) {
+        uint256 totalMinted = _totalMinted();
+        require(totalMinted + baseQuantity <= mintLimit, "minting exceeds the limit");
+        uint256 bonus = baseQuantity / WHITELIST_BONUS_PER;
+        uint256 bonusAdded = baseQuantity + bonus;
+        // unfortunately if there are not enough stocks, you can't earn full bonus!
+        return totalMinted + bonusAdded > mintLimit ? mintLimit - totalMinted : bonusAdded;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -157,5 +190,15 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     modifier whenPaused() {
         require(paused, "Pausable: not paused");
         _;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Withdraw
+    ///////////////////////////////////////////////////////////////////
+
+    // TODO: divide money peacefully
+    function withdraw() external onlyOwner {
+        uint256 amount = address(this).balance;
+        payable(msg.sender).transfer(amount);
     }
 }
