@@ -13,6 +13,7 @@
  ███  ███  ██   ███   ██████   ██    ██     ██     ███████▓  ██       
  ██▒  ▒██  ██   ███   ██████   ██    ██     ██     ░█████▒   ██       
 
+         --- ANIMATED NEW WORLDS IN THE METAVERSE. ANIM.JP ---
 */
 
 // SPDX-License-Identifier: UNLICENSED
@@ -29,21 +30,40 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Pausab
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
 
 contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryableUpgradeable, OwnableUpgradeable {
-    
+    using MerkleProofUpgradeable for bytes32[];
+
+    uint256 private constant WHITELISTED_OWNER_MINT_LIMIT = 20;
+    uint256 private constant WHITELIST_PRICE = .06 ether;
+    uint256 private constant PUBLIC_PRICE = .08 ether;
+
+    ///////////////////////////////////////////////////////////////////
+    //// Override to Configure
+    ///////////////////////////////////////////////////////////////////
+
     function initialize() public initializerERC721A initializer {
         __ERC721A_init("ANIM.JP", "AJP");
         __Ownable_init();
     }
 
-    function _baseURI() internal override pure virtual returns (string memory) {
+    function _baseURI() internal pure virtual override returns (string memory) {
         return "https://anim.jp/nfts/";
     }
 
-    function _startTokenId() internal override pure virtual returns (uint256) {
+    function _startTokenId() internal pure virtual override returns (uint256) {
         return 1;
     }
 
-    function mint(uint256 quantity, bytes32[] calldata merkleProof) external payable whenNotPaused checkWhitelist(merkleProof) {
+    ///////////////////////////////////////////////////////////////////
+    //// Minting Tokens
+    ///////////////////////////////////////////////////////////////////
+
+    function whitelistMint(uint256 quantity, bytes32[] calldata merkleProof)
+        external
+        payable
+        whenNotPaused
+        checkWhitelist(merkleProof)
+        checkWhitelistMintLimit(quantity)
+    {
         _safeMint(msg.sender, quantity);
     }
 
@@ -59,8 +79,6 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     //// Whitelist
     ///////////////////////////////////////////////////////////////////
 
-    using MerkleProofUpgradeable for bytes32[];
-
     bytes32 private _merkleRoot;
 
     function setWhitelist(bytes32 merkleRoot) external onlyOwner {
@@ -68,18 +86,17 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     }
 
     modifier checkWhitelist(bytes32[] calldata merkleProof) {
-        require(
-            merkleProof.verify(
-                _merkleRoot,
-                keccak256(abi.encodePacked(msg.sender))
-            ),
-            "invalid merkle proof"
-        );
+        require(merkleProof.verify(_merkleRoot, keccak256(abi.encodePacked(msg.sender))), "invalid merkle proof");
+        _;
+    }
+
+    modifier checkWhitelistMintLimit(uint256 quantity) {
+        require(_numberMinted(msg.sender) + quantity <= WHITELISTED_OWNER_MINT_LIMIT, "WL minting exceeds the limit");
         _;
     }
 
     ///////////////////////////////////////////////////////////////////
-    //// Pausable
+    //// Pausing
     ///////////////////////////////////////////////////////////////////
 
     event Paused(address account);
