@@ -32,25 +32,31 @@ import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgrad
 contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryableUpgradeable, OwnableUpgradeable {
     using MerkleProofUpgradeable for bytes32[];
 
-    uint256 private constant WHITELISTED_OWNER_MINT_LIMIT = 20;
-    uint256 private constant WHITELIST_PRICE = .06 ether;
-    uint256 private constant PUBLIC_PRICE = .08 ether;
-
-    ///////////////////////////////////////////////////////////////////
-    //// Override to Configure
-    ///////////////////////////////////////////////////////////////////
+    uint256 public constant WHITELISTED_OWNER_MINT_LIMIT = 20;
+    uint256 public constant WHITELIST_PRICE = .06 ether;
+    uint256 public constant PUBLIC_PRICE = .08 ether;
 
     function initialize() public initializerERC721A initializer {
         __ERC721A_init("ANIM.JP", "AJP");
         __Ownable_init();
     }
 
-    function _baseURI() internal pure virtual override returns (string memory) {
-        return "https://anim.jp/nfts/";
-    }
-
     function _startTokenId() internal pure virtual override returns (uint256) {
         return 1;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Base URI
+    ///////////////////////////////////////////////////////////////////
+
+    string public baseURI = "https://anim.jp/nfts/";
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI;
+    }
+
+    function setBaseURI(string memory baseURI_) external onlyOwner {
+        baseURI = baseURI_;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -61,18 +67,44 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         external
         payable
         whenNotPaused
+        checkMintLimit(quantity)
         checkWhitelist(merkleProof)
         checkWhitelistMintLimit(quantity)
     {
         _safeMint(msg.sender, quantity);
     }
 
-    function adminMint(uint256 quantity) external payable onlyOwner {
+    function adminMint(uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
         _mint(msg.sender, quantity);
     }
 
-    function adminMint(address to, uint256 quantity) external payable onlyOwner {
+    function adminMint(address to, uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
         _mint(to, quantity);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Withdraw
+    ///////////////////////////////////////////////////////////////////
+
+    // TODO: divide money peacefully
+    function withdraw() external onlyOwner {
+        uint256 amount = address(this).balance;
+        payable(msg.sender).transfer(amount);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Minting Limit
+    ///////////////////////////////////////////////////////////////////
+
+    uint256 public mintLimit = 10_000;
+
+    function setMintLimit(uint256 _mintLimit) external onlyOwner {
+        mintLimit = _mintLimit;
+    }
+
+    modifier checkMintLimit(uint256 quantity) {
+        require(_totalMinted() + quantity <= mintLimit, "minting exceeds the limit");
+        _;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -85,8 +117,12 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         _merkleRoot = merkleRoot;
     }
 
+    function isWhitelisted(bytes32[] calldata merkleProof) public view returns (bool) {
+        return merkleProof.verify(_merkleRoot, keccak256(abi.encodePacked(msg.sender)));
+    }
+
     modifier checkWhitelist(bytes32[] calldata merkleProof) {
-        require(merkleProof.verify(_merkleRoot, keccak256(abi.encodePacked(msg.sender))), "invalid merkle proof");
+        require(isWhitelisted(merkleProof), "invalid merkle proof");
         _;
     }
 
@@ -102,29 +138,25 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     event Paused(address account);
     event Unpaused(address account);
 
-    bool private _paused = false;
-
-    function paused() external view returns (bool) {
-        return _paused;
-    }
+    bool public paused = false;
 
     function pause() external onlyOwner whenNotPaused {
-        _paused = true;
+        paused = true;
         emit Paused(_msgSender());
     }
 
     function unpause() external onlyOwner whenPaused {
-        _paused = false;
+        paused = false;
         emit Unpaused(_msgSender());
     }
 
     modifier whenNotPaused() {
-        require(!_paused, "Pausable: paused");
+        require(!paused, "Pausable: paused");
         _;
     }
 
     modifier whenPaused() {
-        require(_paused, "Pausable: not paused");
+        require(paused, "Pausable: not paused");
         _;
     }
 }
