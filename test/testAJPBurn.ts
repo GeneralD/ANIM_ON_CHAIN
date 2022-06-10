@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 
-describe("AJP burn", () => {
+describe("Burn AJP", () => {
   it("Owner can burn then totalSupply decreased", async () => {
     const [deployer] = await ethers.getSigners()
 
