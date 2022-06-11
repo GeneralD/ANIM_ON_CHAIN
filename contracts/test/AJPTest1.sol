@@ -21,6 +21,10 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
         paused = false;
     }
 
+    function _startTokenId() internal pure virtual override returns (uint256) {
+        return 1;
+    }
+
     string public baseURI;
 
     uint256 public mintLimit;

@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
+import { describe, it } from 'mocha'
 
 describe("Burn AJP", () => {
   it("Owner can burn then totalSupply decreased", async () => {

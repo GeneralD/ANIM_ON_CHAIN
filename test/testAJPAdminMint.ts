@@ -1,7 +1,8 @@
 import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
+import { describe, it } from 'mocha'
 
-describe("Mint AJP", () => {
+describe("Mint AJP as admin", () => {
   it("Owner can mint in the limit", async () => {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = await upgrades.deployProxy(AJP)

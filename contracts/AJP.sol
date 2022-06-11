@@ -160,7 +160,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     /**
      * @dev returns baseQuantity + bonus.
      */
-    function bonusQuantity(uint256 baseQuantity) private view returns (uint256) {
+    function bonusQuantity(uint256 baseQuantity) public view returns (uint256) {
         uint256 totalMinted = _totalMinted();
         require(totalMinted + baseQuantity <= mintLimit, "minting exceeds the limit");
         uint256 bonus = baseQuantity / WHITELIST_BONUS_PER;

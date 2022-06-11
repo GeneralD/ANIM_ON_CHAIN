@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
 import { MerkleTree } from 'merkletreejs'
+import { describe, it } from 'mocha'
 
 describe("AJP whitelist", () => {
     it("Whitelisted member can mint", async () => {

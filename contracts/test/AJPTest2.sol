@@ -22,6 +22,14 @@ contract AJPTest2 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
         newField = 555;
     }
 
+    function _startTokenId() internal pure virtual override returns (uint256) {
+        return 1;
+    }
+
+    function migrate(uint256 _newField) public reinitializer(2) {
+        newField = _newField;
+    }
+
     string public baseURI;
 
     uint256 public mintLimit;
@@ -30,5 +38,5 @@ contract AJPTest2 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
 
     bool public paused;
 
-    int256 public newField;
+    uint256 public newField;
 }
