@@ -3,6 +3,12 @@ import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
 describe("AJP whitelist bonus", () => {
+  it("Check prerequisites", async () => {
+    const AJP = await ethers.getContractFactory("AJP")
+    const instance = await upgrades.deployProxy(AJP)
+    expect(await instance.WHITELIST_BONUS_PER()).is.equal(10, "solidity code changed?")
+  })
+
   it("Check bonus", async () => {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = await upgrades.deployProxy(AJP)

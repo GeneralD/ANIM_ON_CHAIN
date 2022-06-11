@@ -207,4 +207,15 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         uint256 amount = address(this).balance;
         payable(msg.sender).transfer(amount);
     }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Utilities
+    ///////////////////////////////////////////////////////////////////
+
+    /**
+     * @dev Just alias function to call balanceOf with msg.sender as an argument.
+     */
+    function balance() external view returns (uint256) {
+        return balanceOf(msg.sender);
+    }
 }

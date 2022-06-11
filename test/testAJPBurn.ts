@@ -51,4 +51,6 @@ describe("Burn AJP", () => {
     // burn reduces totalSupply but does't release space for future mint
     await expect(instance.adminMint(5)).to.be.reverted
   })
+
+  // TODO: burn test with approvement
 })
