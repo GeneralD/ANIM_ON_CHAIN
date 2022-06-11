@@ -20,13 +20,13 @@ describe("AJP whitelist", () => {
 
         // john is whitelisted
         const proofOfJohn = tree.getHexProof(keccak256(john.address))
-        expect(await instance.connect(john.address).isWhitelisted(proofOfJohn)).is.true
+        expect(await instance.connect(john).isWhitelisted(proofOfJohn)).is.true
         // jonny is whitelisted
         const proofOfJonny = tree.getHexProof(keccak256(jonny.address))
-        expect(await instance.connect(jonny.address).isWhitelisted(proofOfJonny)).is.true
+        expect(await instance.connect(jonny).isWhitelisted(proofOfJonny)).is.true
         // jonathan is whitelisted
         const proofOfJonathan = tree.getHexProof(keccak256(jonathan.address))
-        expect(await instance.connect(jonathan.address).isWhitelisted(proofOfJonathan)).is.true
+        expect(await instance.connect(jonathan).isWhitelisted(proofOfJonathan)).is.true
     })
 
     it("Not whitelisted member can't mint", async () => {
@@ -47,13 +47,13 @@ describe("AJP whitelist", () => {
         // mike is not whitelisted
         const proofOfMike = tree.getHexProof(keccak256(mike.address))
         expect(await instance.isWhitelisted(proofOfMike)).is.false
-        expect(await instance.connect(mike.address).isWhitelisted(proofOfDeployer)).is.false
+        expect(await instance.connect(mike).isWhitelisted(proofOfDeployer)).is.false
         // michael is not whitelisted
         const proofOfMichael = tree.getHexProof(keccak256(michael.address))
-        expect(await instance.connect(michael.address).isWhitelisted(proofOfMichael)).is.false
+        expect(await instance.connect(michael).isWhitelisted(proofOfMichael)).is.false
         // mick is not whitelisted
         const proofOfMick = tree.getHexProof(keccak256(mick.address))
-        expect(await instance.connect(mick.address).isWhitelisted(proofOfMick)).is.false
+        expect(await instance.connect(mick).isWhitelisted(proofOfMick)).is.false
     })
 
     it("Other's hex proof is not valid", async () => {
@@ -70,16 +70,16 @@ describe("AJP whitelist", () => {
         await instance.setWhitelist(root)
 
         const proofOfJohn = tree.getHexProof(keccak256(john.address))
-        expect(await instance.connect(mike.address).isWhitelisted(proofOfJohn)).is.false
+        expect(await instance.connect(mike).isWhitelisted(proofOfJohn)).is.false
 
         const proofOfJonny = tree.getHexProof(keccak256(jonny.address))
-        expect(await instance.connect(mike.address).isWhitelisted(proofOfJonny)).is.false
+        expect(await instance.connect(mike).isWhitelisted(proofOfJonny)).is.false
 
         const proofOfJonathan = tree.getHexProof(keccak256(jonathan.address))
-        expect(await instance.connect(mike.address).isWhitelisted(proofOfJonathan)).is.false
+        expect(await instance.connect(mike).isWhitelisted(proofOfJonathan)).is.false
 
         // they are whitelisted, but other member's proof is not valid
-        expect(await instance.connect(jonny.address).isWhitelisted(proofOfJohn)).is.false
-        expect(await instance.connect(jonny.address).isWhitelisted(proofOfJonathan)).is.false
+        expect(await instance.connect(jonny).isWhitelisted(proofOfJohn)).is.false
+        expect(await instance.connect(jonny).isWhitelisted(proofOfJonathan)).is.false
     })
 })

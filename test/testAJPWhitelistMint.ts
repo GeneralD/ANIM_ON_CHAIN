@@ -25,7 +25,7 @@ describe("Mint AJP as whitelisted member", () => {
 
         // mint
         const proof = tree.getHexProof(keccak256(john.address))
-        // await instance.connect(john.address).whitelistMint(25, true, proof, { value: whitelistPrice })
+        // await instance.connect(john).whitelistMint(25, true, proof, { value: whitelistPrice })
 
         // expect(await instance.balanceOf(john.address)).to.equal(27)
     })
