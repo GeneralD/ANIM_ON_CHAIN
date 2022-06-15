@@ -3,7 +3,9 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
+import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
+import MerkleTree from 'merkletreejs'
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -19,6 +21,21 @@ async function main() {
   await instance.deployed()
 
   console.log("AJP deployed to:", instance.address)
+
+  // list of important guys
+  const chiefAddresses = [
+    process.env.CEO_ADDRESS,
+    process.env.CTO_ADDRESS,
+    process.env.CFO_ADDRESS,
+    process.env.CMO_ADDRESS,
+  ].filter((elm?: string): elm is string => elm !== undefined)
+  // register merkle root of the guys
+  const leaves = chiefAddresses.map(keccak256)
+  const tree = new MerkleTree(leaves, keccak256, { sort: true })
+  const root = tree.getHexRoot()
+  await instance.setChiefList(root)
+
+  console.log(`Merkle root of ${chiefAddresses.length} guys is: ${root}`)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

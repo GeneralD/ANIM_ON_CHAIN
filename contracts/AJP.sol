@@ -64,6 +64,10 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
     //// Minting Tokens
     ///////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////
+    //// Whitelist Mint
+    //////////////////////////////////
+
     function whitelistMint(
         uint256 quantity,
         bool claimBonus,
@@ -80,6 +84,10 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         _safeMint(msg.sender, claimBonus ? bonusQuantity(quantity) : quantity);
     }
 
+    //////////////////////////////////
+    //// Public Mint
+    //////////////////////////////////
+
     function publicMint(uint256 quantity)
         external
         payable
@@ -90,12 +98,37 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         _safeMint(msg.sender, quantity);
     }
 
+    //////////////////////////////////
+    //// Chief Mint
+    //////////////////////////////////
+
+    function chiefMint(uint256 quantity, bytes32[] calldata merkleProof)
+        external
+        whenNotPaused
+        checkMintLimit(quantity)
+        checkChiefsList(merkleProof)
+    {
+        _mint(msg.sender, quantity);
+    }
+
+    function chiefMintTo(
+        address to,
+        uint256 quantity,
+        bytes32[] calldata merkleProof
+    ) external whenNotPaused checkMintLimit(quantity) checkChiefsList(merkleProof) {
+        _safeMint(to, quantity);
+    }
+
+    //////////////////////////////////
+    //// Admin Mint
+    //////////////////////////////////
+
     function adminMint(uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
         _mint(msg.sender, quantity);
     }
 
     function adminMintTo(address to, uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
-        _mint(to, quantity);
+        _safeMint(to, quantity);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -122,6 +155,25 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
 
     modifier checkPay(uint256 price, uint256 quantity) {
         require(msg.value >= price * quantity, "not enough eth");
+        _;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Chief List
+    ///////////////////////////////////////////////////////////////////
+
+    bytes32 private _chiefsMerkleRoot;
+
+    function setChiefList(bytes32 merkleRoot) external onlyOwner {
+        _chiefsMerkleRoot = merkleRoot;
+    }
+
+    function areYouChief(bytes32[] calldata merkleProof) public view returns (bool) {
+        return merkleProof.verify(_chiefsMerkleRoot, keccak256(abi.encodePacked(msg.sender)));
+    }
+
+    modifier checkChiefsList(bytes32[] calldata merkleProof) {
+        require(areYouChief(merkleProof), "invalid merkle proof");
         _;
     }
 

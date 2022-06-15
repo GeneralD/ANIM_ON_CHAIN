@@ -5,7 +5,7 @@ import { MerkleTree } from 'merkletreejs'
 import { describe, it } from 'mocha'
 
 describe("AJP whitelist", () => {
-    it("Whitelisted member can mint", async () => {
+    it("Whitelisted member is verified", async () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
         const whitelisted = [john, jonny, jonathan]
 
@@ -29,7 +29,7 @@ describe("AJP whitelist", () => {
         expect(await instance.connect(jonathan).isWhitelisted(proofOfJonathan)).is.true
     })
 
-    it("Not whitelisted member can't mint", async () => {
+    it("Not whitelisted member is not verified", async () => {
         const [deployer, john, jonny, jonathan, mike, michael, mick] = await ethers.getSigners()
         const whitelisted = [john, jonny, jonathan]
 
@@ -56,7 +56,7 @@ describe("AJP whitelist", () => {
         expect(await instance.connect(mick).isWhitelisted(proofOfMick)).is.false
     })
 
-    it("Other's hex proof is not valid", async () => {
+    it("Other's hex proof is invalid", async () => {
         const [, john, jonny, jonathan, mike] = await ethers.getSigners()
         const whitelisted = [john, jonny, jonathan]
 

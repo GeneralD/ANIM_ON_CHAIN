@@ -29,6 +29,8 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
 
     uint256 public mintLimit;
 
+    bytes32 private _chiefsMerkleRoot;
+
     bytes32 private _merkleRoot;
 
     bool public paused;
