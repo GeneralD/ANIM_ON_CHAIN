@@ -2,10 +2,12 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("Pause AJP", () => {
     it("Can adminMint even it's pausing", async () => {
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setMintLimit(10)
 
@@ -19,7 +21,7 @@ describe("Pause AJP", () => {
 
     it("Toggle pausing", async () => {
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         expect(await instance.paused()).is.false
 
@@ -35,9 +37,9 @@ describe("Pause AJP", () => {
     })
 
     it("Only admin can pause", async () => {
-        const [deployer, john] = await ethers.getSigners()
+        const [, john] = await ethers.getSigners()
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         expect(await instance.paused()).is.false
 

@@ -5,12 +5,14 @@ import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 import { describe } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("Mint AJP as whitelisted member", () => {
     it("Whitelisted member can mint and get bonus", async () => {
         const AJP = await ethers.getContractFactory("AJP")
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -38,7 +40,7 @@ describe("Mint AJP as whitelisted member", () => {
         const AJP = await ethers.getContractFactory("AJP")
         const [, john, jonny, jonathan, mike] = await ethers.getSigners()
 
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -57,7 +59,7 @@ describe("Mint AJP as whitelisted member", () => {
         const AJP = await ethers.getContractFactory("AJP")
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -89,7 +91,7 @@ describe("Mint AJP as whitelisted member", () => {
         const AJP = await ethers.getContractFactory("AJP")
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setMintLimit(10)
 

@@ -4,6 +4,8 @@ import { ethers, upgrades } from 'hardhat'
 import { MerkleTree } from 'merkletreejs'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("AJP Chief Mint", () => {
     it("Chief member is verified", async () => {
         // list of important guys
@@ -20,7 +22,7 @@ describe("AJP Chief Mint", () => {
         const root = tree.getHexRoot()
 
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
         await instance.setChiefList(root)
 
         expect(process.env.CTO_ADDRESS).is.match(/^0x[0-9a-fA-F]{40}/)
@@ -57,7 +59,7 @@ describe("AJP Chief Mint", () => {
         const root = tree.getHexRoot()
 
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
         await instance.setChiefList(root)
 
         const [, , , , , , , stranger] = await ethers.getSigners()

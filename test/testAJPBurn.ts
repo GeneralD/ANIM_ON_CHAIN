@@ -2,12 +2,14 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("Burn AJP", () => {
   it("Owner can burn then totalSupply decreased", async () => {
     const [deployer] = await ethers.getSigners()
 
     const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP)
+    const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(10)
     await instance.adminMint(5)
@@ -25,7 +27,7 @@ describe("Burn AJP", () => {
 
   it("Cannot burn same token twice", async () => {
     const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP)
+    const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(10)
     await instance.adminMint(5)
@@ -36,7 +38,7 @@ describe("Burn AJP", () => {
 
   it("Burning doesn't release the minting spaces", async () => {
     const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP)
+    const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(5)
     await instance.adminMint(5)

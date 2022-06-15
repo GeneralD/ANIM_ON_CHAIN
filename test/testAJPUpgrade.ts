@@ -2,10 +2,12 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("Upgrade AJP", () => {
     it("Upgrade then field values are stored", async () => {
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setBaseURI("https://test.com/")
         await instance.setMintLimit(300)
@@ -22,7 +24,7 @@ describe("Upgrade AJP", () => {
 
     it("Upgrade then new field is not set", async () => {
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         const AJPTest2 = await ethers.getContractFactory("AJPTest2")
         const upgraded = await upgrades.upgradeProxy(instance, AJPTest2)
@@ -34,7 +36,7 @@ describe("Upgrade AJP", () => {
 
     it("Upgrade and run migrate funciton", async () => {
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         const AJPTest2 = await ethers.getContractFactory("AJPTest2")
         const upgraded = await upgrades.upgradeProxy(instance, AJPTest2, { call: { fn: "migrate", args: [777] } })
@@ -51,7 +53,7 @@ describe("Upgrade AJP", () => {
         const beacon = await upgrades.deployBeacon(AJP)
 
         // deploy proxied AJP
-        const instance = await upgrades.deployBeaconProxy(beacon, AJP)
+        const instance = await upgrades.deployBeaconProxy(beacon, AJP) as AJP
 
         // set values
         await instance.setBaseURI("https://test.com/")

@@ -4,6 +4,8 @@ import { ethers, upgrades } from 'hardhat'
 import { MerkleTree } from 'merkletreejs'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("AJP whitelist", () => {
     it("Whitelisted member is verified", async () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
@@ -14,7 +16,7 @@ describe("AJP whitelist", () => {
         const root = tree.getHexRoot()
 
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
 
@@ -38,7 +40,7 @@ describe("AJP whitelist", () => {
         const root = tree.getHexRoot()
 
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
         // deployer is not whitelisted
@@ -65,7 +67,7 @@ describe("AJP whitelist", () => {
         const root = tree.getHexRoot()
 
         const AJP = await ethers.getContractFactory("AJP")
-        const instance = await upgrades.deployProxy(AJP)
+        const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
 

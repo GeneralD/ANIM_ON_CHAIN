@@ -2,10 +2,12 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
+import { AJP } from '../typechain'
+
 describe("Mint AJP as admin", () => {
   it("Owner can mint in the limit", async () => {
     const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP)
+    const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(2000)
 
@@ -17,7 +19,7 @@ describe("Mint AJP as admin", () => {
     const [, john] = await ethers.getSigners()
 
     const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP)
+    const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(2000)
 
