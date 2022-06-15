@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
-import { AJP } from '../typechain'
+import { AJP, AJPTest1, AJPTest2 } from '../typechain'
 
 describe("Upgrade AJP", () => {
     it("Upgrade then field values are stored", async () => {
@@ -14,7 +14,7 @@ describe("Upgrade AJP", () => {
         await instance.pause()
 
         const AJPTest1 = await ethers.getContractFactory("AJPTest1")
-        const upgraded = await upgrades.upgradeProxy(instance, AJPTest1)
+        const upgraded = await upgrades.upgradeProxy(instance, AJPTest1) as AJPTest1
         expect(upgraded.address).to.equal(instance.address, "before and after upgrade addresses should be same")
 
         expect(await upgraded.baseURI()).to.equal("https://test.com/", "stored values should be kept beyond upgrade")
@@ -27,7 +27,7 @@ describe("Upgrade AJP", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         const AJPTest2 = await ethers.getContractFactory("AJPTest2")
-        const upgraded = await upgrades.upgradeProxy(instance, AJPTest2)
+        const upgraded = await upgrades.upgradeProxy(instance, AJPTest2) as AJPTest2
         expect(upgraded.address).to.equal(instance.address, "before and after upgrade addresses should be same")
 
         // initializer of AJPTest2 is not run
@@ -39,7 +39,7 @@ describe("Upgrade AJP", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         const AJPTest2 = await ethers.getContractFactory("AJPTest2")
-        const upgraded = await upgrades.upgradeProxy(instance, AJPTest2, { call: { fn: "migrate", args: [777] } })
+        const upgraded = await upgrades.upgradeProxy(instance, AJPTest2, { call: { fn: "migrate", args: [777] } }) as AJPTest2
         expect(upgraded.address).to.equal(instance.address, "before and after upgrade addresses should be same")
 
         // initializer of AJPTest2 is not run
@@ -65,7 +65,7 @@ describe("Upgrade AJP", () => {
         await upgrades.upgradeBeacon(beacon.address, AJPTest1)
 
         // deploy proxied AJPTest1
-        const upgraded = await AJPTest1.attach(instance.address)
+        const upgraded = await AJPTest1.attach(instance.address) as AJPTest1
         expect(upgraded.address).to.equal(instance.address, "before and after upgrade addresses should be same")
 
         // check values should be stored
