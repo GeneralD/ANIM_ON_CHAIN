@@ -40,6 +40,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         baseURI = "https://anim.jp/nfts/";
         mintLimit = 9_999;
         paused = false;
+        _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
     }
 
     function _startTokenId() internal pure virtual override returns (uint256) {

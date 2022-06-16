@@ -30,18 +30,25 @@ describe("AJP Chief Mint", () => {
         // CTO is a chief
         const proof = tree.getHexProof(keccak256(process.env.CTO_ADDRESS!))
         expect(await instance.connect(process.env.CTO_ADDRESS!).areYouChief(proof)).is.true
+    })
 
-        // Cannot test below because VoidSigner
+    it("Chief member can mint", async () => {
+        const [, john, jonny, jonathan, , , someone] = await ethers.getSigners()
+        const chiefs = [john, jonny, jonathan]
 
-        // try to mint for himself
-        // await instance.connect(process.env.CTO_ADDRESS!).chiefMint(10, proof)
+        // use signer addresses instead of actual chiefs for testing
+        const leaves = chiefs.map(account => keccak256(account.address))
+        const tree = new MerkleTree(leaves, keccak256, { sort: true })
+        const root = tree.getHexRoot()
 
-        // try to mint to other guys
-        // expect(process.env.CFO_ADDRESS).is.match(/^0x[0-9a-fA-F]{40}/)
-        // await instance.connect(process.env.CTO_ADDRESS!).chiefMintTo(process.env.CFO_ADDRESS!, 10, proof)
+        const AJP = await ethers.getContractFactory("AJP")
+        const instance = await upgrades.deployProxy(AJP) as AJP
+        await instance.setChiefList(root)
 
-        // const [, john] = await ethers.getSigners()
-        // await instance.connect(process.env.CTO_ADDRESS!).chiefMintTo(john.address, 10, proof)
+        // try to mint
+        const proof = tree.getHexProof(keccak256(jonny.address))
+        instance.connect(jonny).chiefMint(10, proof)
+        instance.connect(jonny).chiefMintTo(someone.address, 10, proof)
     })
 
     it("Not Chief member can't mint", async () => {
