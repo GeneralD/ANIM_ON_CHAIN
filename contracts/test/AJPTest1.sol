@@ -25,6 +25,8 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
         return 1;
     }
 
+    uint96 private _royaltyFraction;
+
     string public baseURI;
 
     uint256 public mintLimit;

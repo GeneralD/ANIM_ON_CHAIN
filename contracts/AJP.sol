@@ -26,9 +26,16 @@ import "erc721a-upgradeable/contracts/ERC721AUpgradeable.sol";
 import "erc721a-upgradeable/contracts/extensions/ERC721ABurnableUpgradeable.sol";
 import "erc721a-upgradeable/contracts/extensions/ERC721AQueryableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
 
-contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryableUpgradeable, OwnableUpgradeable {
+contract AJP is
+    ERC721AUpgradeable,
+    ERC721ABurnableUpgradeable,
+    ERC721AQueryableUpgradeable,
+    OwnableUpgradeable,
+    IERC2981Upgradeable
+{
     using MerkleProofUpgradeable for bytes32[];
 
     function initialize() public initializerERC721A initializer {
@@ -41,10 +48,43 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
         mintLimit = 9_999;
         paused = false;
         _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
+        _royaltyFraction = 1_000; // 10%
     }
 
-    function _startTokenId() internal pure virtual override returns (uint256) {
+    function _startTokenId() internal pure override returns (uint256) {
         return 1;
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721AUpgradeable, IERC721AUpgradeable, IERC165Upgradeable)
+        returns (bool)
+    {
+        return interfaceId == type(IERC2981Upgradeable).interfaceId || super.supportsInterface(interfaceId);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// ERC2981
+    ///////////////////////////////////////////////////////////////////
+
+    uint96 private _royaltyFraction;
+
+    /**
+     * @dev set royalty in percentage x 100. e.g. 5% should be 500.
+     */
+    function setRoyaltyFraction(uint96 royaltyFraction) external onlyOwner {
+        _royaltyFraction = royaltyFraction;
+    }
+
+    function royaltyInfo(uint256 tokenId, uint256 salePrice)
+        external
+        view
+        override
+        returns (address receiver, uint256 royaltyAmount)
+    {
+        receiver = owner();
+        royaltyAmount = (salePrice * _royaltyFraction) / 10_000;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -53,7 +93,7 @@ contract AJP is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQueryable
 
     string public baseURI;
 
-    function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal view override returns (string memory) {
         return baseURI;
     }
 
