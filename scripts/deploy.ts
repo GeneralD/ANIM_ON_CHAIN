@@ -7,17 +7,19 @@ import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 
+import { AJP } from '../typechain'
+
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
-  // await hre.run('compile');
+  // await hre.run('compile')
 
   // We get the contract to deploy
   const AJP = await ethers.getContractFactory("AJP")
-  const instance = await upgrades.deployProxy(AJP)
+  const instance = await upgrades.deployProxy(AJP) as AJP
   await instance.deployed()
 
   console.log("AJP deployed to:", instance.address)
@@ -28,7 +30,8 @@ async function main() {
     process.env.CTO_ADDRESS,
     process.env.CFO_ADDRESS,
     process.env.CMO_ADDRESS,
-  ].filter((elm?: string): elm is string => elm !== undefined)
+  ].filter((elm?: string): elm is string => elm !== undefined && elm.startsWith("0x"))
+
   // register merkle root of the guys
   const leaves = chiefAddresses.map(keccak256)
   const tree = new MerkleTree(leaves, keccak256, { sort: true })
