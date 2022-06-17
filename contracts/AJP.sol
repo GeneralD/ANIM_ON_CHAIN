@@ -44,7 +44,7 @@ contract AJP is
         __ERC721AQueryable_init();
         __Ownable_init();
 
-        baseURI = "https://anim.jp/nfts/";
+        baseURI = "https://animjpnfttest.s3.ap-northeast-3.amazonaws.com/";
         mintLimit = 9_999;
         paused = false;
         _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
@@ -77,12 +77,10 @@ contract AJP is
         _royaltyFraction = royaltyFraction;
     }
 
-    function royaltyInfo(uint256 tokenId, uint256 salePrice)
-        external
-        view
-        override
-        returns (address receiver, uint256 royaltyAmount)
-    {
+    function royaltyInfo(
+        uint256, /*tokenId*/
+        uint256 salePrice
+    ) external view override returns (address receiver, uint256 royaltyAmount) {
         receiver = owner();
         royaltyAmount = (salePrice * _royaltyFraction) / 10_000;
     }
@@ -99,6 +97,16 @@ contract AJP is
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
         baseURI = baseURI_;
+    }
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override(ERC721AUpgradeable, IERC721AUpgradeable)
+        returns (string memory)
+    {
+        return string(abi.encodePacked(super.tokenURI(tokenId), ".json"));
     }
 
     ///////////////////////////////////////////////////////////////////
