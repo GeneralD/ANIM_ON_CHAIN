@@ -122,7 +122,7 @@ contract AJP is
     //////////////////////////////////
 
     function contractURI() public view returns (string memory) {
-        return string(abi.encodePacked(baseURI, "contract.json"));
+        return string(abi.encodePacked(baseURI, "index.json"));
     }
 
     ///////////////////////////////////////////////////////////////////
