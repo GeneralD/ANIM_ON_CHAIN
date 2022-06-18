@@ -44,7 +44,7 @@ contract AJP is
         __ERC721AQueryable_init();
         __Ownable_init();
 
-        baseURI = "https://animjpnfttest.s3.ap-northeast-3.amazonaws.com/";
+        baseURI = "https://animjpnfttest.s3.amazonaws.com/";
         mintLimit = 9_999;
         paused = false;
         _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
@@ -86,8 +86,12 @@ contract AJP is
     }
 
     ///////////////////////////////////////////////////////////////////
-    //// Base URI
+    //// URI
     ///////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////
+    //// Base URI
+    //////////////////////////////////
 
     string public baseURI;
 
@@ -99,6 +103,10 @@ contract AJP is
         baseURI = baseURI_;
     }
 
+    //////////////////////////////////
+    //// Token URI
+    //////////////////////////////////
+
     function tokenURI(uint256 tokenId)
         public
         view
@@ -107,6 +115,14 @@ contract AJP is
         returns (string memory)
     {
         return string(abi.encodePacked(super.tokenURI(tokenId), ".json"));
+    }
+
+    //////////////////////////////////
+    //// Contract URI
+    //////////////////////////////////
+
+    function contractURI() public view returns (string memory) {
+        return string(abi.encodePacked(baseURI, "contract.json"));
     }
 
     ///////////////////////////////////////////////////////////////////
