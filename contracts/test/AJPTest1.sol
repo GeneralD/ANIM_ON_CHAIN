@@ -36,4 +36,9 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
     bytes32 private _merkleRoot;
 
     bool public paused;
+
+    function withdraw() external onlyOwner {
+        uint256 amount = address(this).balance;
+        payable(msg.sender).transfer(amount);
+    }
 }
