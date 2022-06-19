@@ -77,10 +77,13 @@ contract AJP is
         _royaltyFraction = royaltyFraction;
     }
 
-    function royaltyInfo(
-        uint256, /*tokenId*/
-        uint256 salePrice
-    ) external view override returns (address receiver, uint256 royaltyAmount) {
+    function royaltyInfo(uint256 tokenId, uint256 salePrice)
+        external
+        view
+        override
+        checkTokenIdExists(tokenId)
+        returns (address receiver, uint256 royaltyAmount)
+    {
         receiver = owner();
         royaltyAmount = (salePrice * _royaltyFraction) / 10_000;
     }
@@ -334,5 +337,10 @@ contract AJP is
      */
     function balance() external view returns (uint256) {
         return balanceOf(msg.sender);
+    }
+
+    modifier checkTokenIdExists(uint256 tokenId) {
+        require(_exists(tokenId), "tokenId not exist");
+        _;
     }
 }
