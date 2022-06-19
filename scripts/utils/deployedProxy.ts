@@ -1,4 +1,3 @@
-import { isAddress } from 'ethers/lib/utils'
 import { network, upgrades } from 'hardhat'
 
 import object from '../../.openzeppelin/goerli.json'
@@ -16,6 +15,8 @@ export const deployedProxy = async () => {
 export const isProxyDeployed = async () => {
     try {
         const proxy = await deployedProxy()
+        // chain on localhost is disposable but json is left even the chain is discarded.
+        // so need to check if the proxy is currently on chain.
         if (network.name == 'localhost') {
             return await upgrades.erc1967.getAdminAddress(proxy.address) !== "0x0000000000000000000000000000000000000000"
         }
