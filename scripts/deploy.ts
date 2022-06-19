@@ -3,12 +3,12 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-import { assert } from 'console'
 import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 
 import { AJP } from '../typechain'
+import { isProxyDeployed } from './utils/deployedProxy'
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -18,6 +18,8 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile')
 
+  if (await isProxyDeployed()) throw Error("Proxy has already been deployed! 'Upgrade' instead.")
+
   // list of important guys
   const chiefAddresses = [
     process.env.CEO_ADDRESS,
@@ -25,7 +27,7 @@ async function main() {
     process.env.CFO_ADDRESS,
     process.env.CMO_ADDRESS,
   ].filter((elm?: string): elm is string => elm !== undefined && elm.startsWith("0x"))
-  assert(chiefAddresses.length == 4, 'add all VIPs in .env file')
+  if (chiefAddresses.length != 4) throw Error("add all VIPs in .env file")
 
   // We get the contract to deploy
   const AJP = await ethers.getContractFactory("AJP")
