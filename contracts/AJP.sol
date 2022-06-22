@@ -195,7 +195,7 @@ contract AJP is
         _mint(msg.sender, quantity);
     }
 
-    function adminMintTo(address to, uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
+    function adminMintTo(address to, uint256 quantity) external onlyOwner checkMintLimit(quantity) {
         _safeMint(to, quantity);
     }
 
