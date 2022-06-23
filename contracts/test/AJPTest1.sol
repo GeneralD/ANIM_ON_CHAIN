@@ -18,7 +18,7 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
 
         baseURI = "https://anim.jp/nfts/";
         mintLimit = 9_999;
-        paused = false;
+        pauseMintFlags = 0;
     }
 
     function _startTokenId() internal pure virtual override returns (uint256) {
@@ -35,7 +35,7 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
 
     bytes32 private _merkleRoot;
 
-    bool public paused;
+    uint8 public pauseMintFlags;
 
     function withdraw() external onlyOwner {
         uint256 amount = address(this).balance;
