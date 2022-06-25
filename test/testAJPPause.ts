@@ -13,15 +13,24 @@ describe("Pause AJP", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         // unpause if it's paused
-        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
+        if (await instance.isWhitelistMintPaused())
+            await instance.unpauseWhitelistMint()
 
-        await instance.pauseWhitelistMint()
+        await expect(instance.pauseWhitelistMint())
+            .to.emit(instance, "WhitelistMintPaused")
+
         expect(await instance.isWhitelistMintPaused()).is.true
-        await expect(instance.pauseWhitelistMint()).to.revertedWith("whitelist mint: paused")
 
-        await instance.unpauseWhitelistMint()
+        await expect(instance.pauseWhitelistMint())
+            .to.revertedWith("whitelist mint: paused")
+
+        await expect(instance.unpauseWhitelistMint())
+            .to.emit(instance, "WhitelistMintUnpaused")
+
         expect(await instance.isWhitelistMintPaused()).is.false
-        await expect(instance.unpauseWhitelistMint()).to.revertedWith("whitelist mint: not paused")
+
+        await expect(instance.unpauseWhitelistMint())
+            .to.revertedWith("whitelist mint: not paused")
     })
 
 
@@ -30,15 +39,24 @@ describe("Pause AJP", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         // unpause if it's paused
-        if (await instance.isPublicMintPaused()) await instance.unpausePublicMint()
+        if (await instance.isPublicMintPaused())
+            await instance.unpausePublicMint()
 
-        await instance.pausePublicMint()
+        await expect(instance.pausePublicMint())
+            .to.emit(instance, "PublicMintPaused")
+
         expect(await instance.isPublicMintPaused()).is.true
-        await expect(instance.pausePublicMint()).to.revertedWith("public mint: paused")
 
-        await instance.unpausePublicMint()
+        await expect(instance.pausePublicMint())
+            .to.revertedWith("public mint: paused")
+
+        await expect(instance.unpausePublicMint())
+            .to.emit(instance, "PublicMintUnpaused")
+
         expect(await instance.isPublicMintPaused()).is.false
-        await expect(instance.unpausePublicMint()).to.revertedWith("public mint: not paused")
+
+        await expect(instance.unpausePublicMint())
+            .to.revertedWith("public mint: not paused")
     })
 
 
@@ -47,15 +65,24 @@ describe("Pause AJP", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         // unpause if it's paused
-        if (await instance.isChiefMintPaused()) await instance.unpauseChiefMint()
+        if (await instance.isChiefMintPaused())
+            await instance.unpauseChiefMint()
 
-        await instance.pauseChiefMint()
+        await expect(instance.pauseChiefMint())
+            .to.emit(instance, "ChiefMintPaused")
+
         expect(await instance.isChiefMintPaused()).is.true
-        await expect(instance.pauseChiefMint()).to.revertedWith("chief mint: paused")
 
-        await instance.unpauseChiefMint()
+        await expect(instance.pauseChiefMint())
+            .to.revertedWith("chief mint: paused")
+
+        await expect(instance.unpauseChiefMint())
+            .to.emit(instance, "ChiefMintUnpaused")
+
         expect(await instance.isChiefMintPaused()).is.false
-        await expect(instance.unpauseChiefMint()).to.revertedWith("chief mint: not paused")
+
+        await expect(instance.unpauseChiefMint())
+            .to.revertedWith("chief mint: not paused")
     })
 
     it("Only admin can pause", async () => {
