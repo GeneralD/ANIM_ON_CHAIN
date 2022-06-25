@@ -151,6 +151,7 @@ contract AJP is
         checkWhitelistMintLimit(quantity)
         checkPay(WHITELIST_PRICE, quantity)
     {
+        _incrementNumberWhitelistMinted(msg.sender, quantity); // bonus is not included in the count
         _safeMint(msg.sender, claimBonus ? bonusQuantity(quantity) : quantity);
     }
 
@@ -178,6 +179,7 @@ contract AJP is
         checkMintLimit(quantity)
         checkChiefsList(merkleProof)
     {
+        _incrementNumberChiefMinted(msg.sender, quantity);
         _mint(msg.sender, quantity);
     }
 
@@ -186,6 +188,7 @@ contract AJP is
         uint256 quantity,
         bytes32[] calldata merkleProof
     ) external whenChiefMintNotPaused checkMintLimit(quantity) checkChiefsList(merkleProof) {
+        _incrementNumberChiefMinted(msg.sender, quantity);
         _safeMint(to, quantity);
     }
 
@@ -269,7 +272,10 @@ contract AJP is
     }
 
     modifier checkWhitelistMintLimit(uint256 quantity) {
-        require(_numberMinted(msg.sender) + quantity <= WHITELISTED_OWNER_MINT_LIMIT, "WL minting exceeds the limit");
+        require(
+            numberWhitelistMinted(msg.sender) + quantity <= WHITELISTED_OWNER_MINT_LIMIT,
+            "WL minting exceeds the limit"
+        );
         _;
     }
 
@@ -378,6 +384,46 @@ contract AJP is
     modifier whenWhitelistMintPaused() {
         require(isWhitelistMintPaused, "whitelist mint: not paused");
         _;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    //// Aux Data
+    ///////////////////////////////////////////////////////////////////
+
+    uint64 private constant _AUX_BITMASK_ADDRESS_DATA_ENTRY = (1 << 16) - 1;
+    uint64 private constant _AUX_BITPOS_NUMBER_CHIEF_MINTED = 0;
+    uint64 private constant _AUX_BITPOS_NUMBER_WHITELIST_MINTED = 16;
+
+    //////////////////////////////////
+    //// Whitelist Mint
+    //////////////////////////////////
+
+    function numberWhitelistMinted(address owner) public view returns (uint256) {
+        return (_getAux(owner) >> _AUX_BITPOS_NUMBER_WHITELIST_MINTED) & _AUX_BITMASK_ADDRESS_DATA_ENTRY;
+    }
+
+    function _incrementNumberWhitelistMinted(address owner, uint256 quantity) private {
+        require(numberWhitelistMinted(owner) + quantity <= _AUX_BITMASK_ADDRESS_DATA_ENTRY, "quantity overflow");
+        uint64 aux = _getAux(owner);
+        uint64 one = 1;
+        aux += uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_WHITELIST_MINTED) | one);
+        _setAux(owner, aux);
+    }
+
+    //////////////////////////////////
+    //// Chief Mint
+    //////////////////////////////////
+
+    function numberChiefMinted(address owner) public view returns (uint256) {
+        return (_getAux(owner) >> _AUX_BITPOS_NUMBER_CHIEF_MINTED) & _AUX_BITMASK_ADDRESS_DATA_ENTRY;
+    }
+
+    function _incrementNumberChiefMinted(address owner, uint256 quantity) private {
+        require(numberChiefMinted(owner) + quantity <= _AUX_BITMASK_ADDRESS_DATA_ENTRY, "quantity overflow");
+        uint64 aux = _getAux(owner);
+        uint64 one = 1;
+        aux += uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_CHIEF_MINTED) | one);
+        _setAux(owner, aux);
     }
 
     ///////////////////////////////////////////////////////////////////
