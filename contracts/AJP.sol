@@ -404,9 +404,8 @@ contract AJP is
 
     function _incrementNumberWhitelistMinted(address owner, uint256 quantity) private {
         require(numberWhitelistMinted(owner) + quantity <= _AUX_BITMASK_ADDRESS_DATA_ENTRY, "quantity overflow");
-        uint64 aux = _getAux(owner);
         uint64 one = 1;
-        aux += uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_WHITELIST_MINTED) | one);
+        uint64 aux = _getAux(owner) + uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_WHITELIST_MINTED) | one);
         _setAux(owner, aux);
     }
 
@@ -420,9 +419,8 @@ contract AJP is
 
     function _incrementNumberChiefMinted(address owner, uint256 quantity) private {
         require(numberChiefMinted(owner) + quantity <= _AUX_BITMASK_ADDRESS_DATA_ENTRY, "quantity overflow");
-        uint64 aux = _getAux(owner);
         uint64 one = 1;
-        aux += uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_CHIEF_MINTED) | one);
+        uint64 aux = _getAux(owner) + uint64(quantity) * ((one << _AUX_BITPOS_NUMBER_CHIEF_MINTED) | one);
         _setAux(owner, aux);
     }
 

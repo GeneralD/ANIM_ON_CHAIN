@@ -47,8 +47,13 @@ describe("AJP Chief Mint", () => {
 
         // try to mint
         const proof = tree.getHexProof(keccak256(jonny.address))
-        instance.connect(jonny).chiefMint(10, proof)
-        instance.connect(jonny).chiefMintTo(someone.address, 10, proof)
+        await expect(instance.connect(jonny).chiefMint(10, proof))
+            .to.emit(instance, "Transfer")
+            .withArgs("0x0000000000000000000000000000000000000000", jonny.address, 10)
+
+        await expect(instance.connect(jonny).chiefMintTo(someone.address, 10, proof))
+            .to.emit(instance, "Transfer")
+            .withArgs("0x0000000000000000000000000000000000000000", someone.address, 20)
     })
 
     it("Not Chief member can't mint", async () => {
