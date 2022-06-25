@@ -38,11 +38,7 @@ const config: HardhatUserConfig = {
       chainId: 1337,
     },
     rinkeby: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts: accounts,
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
+      url: process.env.RINKEBY_URL || "",
       accounts: accounts,
     },
     goerli: {
