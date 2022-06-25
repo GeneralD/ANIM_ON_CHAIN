@@ -2,13 +2,14 @@ import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { describe } from 'mocha'
 
-import { AJP, AJPTest1, AJPTest2 } from '../typechain'
+import { AJP, AJPTest1 } from '../typechain'
 
 describe("Withdraw from AJP", () => {
     it("Withdraw all", async () => {
         const [deployer] = await ethers.getSigners()
         const AJP = await ethers.getContractFactory("AJP")
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isPublicMintPaused()) await instance.unpausePublicMint()
 
         const mintPrice = await instance.PUBLIC_PRICE()
         const paid = mintPrice.mul(100)
@@ -42,6 +43,7 @@ describe("Withdraw from AJP", () => {
         const [deployer] = await ethers.getSigners()
         const AJP = await ethers.getContractFactory("AJP")
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isPublicMintPaused()) await instance.unpausePublicMint()
 
         const mintPrice = await instance.PUBLIC_PRICE()
         const paid = mintPrice.mul(100)

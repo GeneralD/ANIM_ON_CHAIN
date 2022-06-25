@@ -19,6 +19,7 @@ describe("AJP whitelist", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
+        await instance.unpauseWhitelistMint()
 
         // john is whitelisted
         const proofOfJohn = tree.getHexProof(keccak256(john.address))
@@ -43,6 +44,8 @@ describe("AJP whitelist", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
+        await instance.unpauseWhitelistMint()
+
         // deployer is not whitelisted
         const proofOfDeployer = tree.getHexProof(keccak256(deployer.address))
         expect(await instance.isWhitelisted(proofOfDeployer)).is.false
@@ -70,6 +73,7 @@ describe("AJP whitelist", () => {
         const instance = await upgrades.deployProxy(AJP) as AJP
 
         await instance.setWhitelist(root)
+        await instance.unpauseWhitelistMint()
 
         const proofOfJohn = tree.getHexProof(keccak256(john.address))
         expect(await instance.connect(mike).isWhitelisted(proofOfJohn)).is.false

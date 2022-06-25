@@ -1,39 +1,61 @@
 import { expect } from 'chai'
+import { BigNumber } from 'ethers'
+import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
+import MerkleTree from 'merkletreejs'
 import { describe, it } from 'mocha'
 
 import { AJP } from '../typechain'
 
 describe("Pause AJP", () => {
-    it("Can adminMint even it's pausing", async () => {
+    it("Toggle whitelist mint pausing", async () => {
         const AJP = await ethers.getContractFactory("AJP")
         const instance = await upgrades.deployProxy(AJP) as AJP
 
-        await instance.setMintLimit(10)
+        // unpause if it's paused
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
-        expect(await instance.paused()).is.false
-        await instance.adminMint(1)
+        await instance.pauseWhitelistMint()
+        expect(await instance.isWhitelistMintPaused()).is.true
+        await expect(instance.pauseWhitelistMint()).to.revertedWith("whitelist mint: paused")
 
-        await instance.pause()
-        expect(await instance.paused()).is.true
-        await instance.adminMint(1)
+        await instance.unpauseWhitelistMint()
+        expect(await instance.isWhitelistMintPaused()).is.false
+        await expect(instance.unpauseWhitelistMint()).to.revertedWith("whitelist mint: not paused")
     })
 
-    it("Toggle pausing", async () => {
+
+    it("Toggle public mint pausing", async () => {
         const AJP = await ethers.getContractFactory("AJP")
         const instance = await upgrades.deployProxy(AJP) as AJP
 
-        expect(await instance.paused()).is.false
+        // unpause if it's paused
+        if (await instance.isPublicMintPaused()) await instance.unpausePublicMint()
 
-        await instance.pause()
-        expect(await instance.paused()).is.true
-        await expect(instance.pause()).to.revertedWith("Pausable: paused")
+        await instance.pausePublicMint()
+        expect(await instance.isPublicMintPaused()).is.true
+        await expect(instance.pausePublicMint()).to.revertedWith("public mint: paused")
 
-        await instance.unpause()
-        expect(await instance.paused()).is.false
-        await expect(instance.unpause()).to.revertedWith("Pausable: not paused")
+        await instance.unpausePublicMint()
+        expect(await instance.isPublicMintPaused()).is.false
+        await expect(instance.unpausePublicMint()).to.revertedWith("public mint: not paused")
+    })
 
-        await instance.pause()
+
+    it("Toggle chief mint pausing", async () => {
+        const AJP = await ethers.getContractFactory("AJP")
+        const instance = await upgrades.deployProxy(AJP) as AJP
+
+        // unpause if it's paused
+        if (await instance.isChiefMintPaused()) await instance.unpauseChiefMint()
+
+        await instance.pauseChiefMint()
+        expect(await instance.isChiefMintPaused()).is.true
+        await expect(instance.pauseChiefMint()).to.revertedWith("chief mint: paused")
+
+        await instance.unpauseChiefMint()
+        expect(await instance.isChiefMintPaused()).is.false
+        await expect(instance.unpauseChiefMint()).to.revertedWith("chief mint: not paused")
     })
 
     it("Only admin can pause", async () => {
@@ -41,8 +63,33 @@ describe("Pause AJP", () => {
         const AJP = await ethers.getContractFactory("AJP")
         const instance = await upgrades.deployProxy(AJP) as AJP
 
-        expect(await instance.paused()).is.false
+        await expect(instance.connect(john).pauseChiefMint()).to.revertedWith("Ownable: caller is not the owner")
+        await expect(instance.connect(john).pausePublicMint()).to.revertedWith("Ownable: caller is not the owner")
+        await expect(instance.connect(john).pauseWhitelistMint()).to.revertedWith("Ownable: caller is not the owner")
+    })
 
-        await expect(instance.connect(john).pause()).is.revertedWith("Ownable: caller is not the owner")
+    it("Whitelist mint is not available if it's paused", async () => {
+        const AJP = await ethers.getContractFactory("AJP")
+        const [, john, jonny, jonathan] = await ethers.getSigners()
+
+        const instance = await upgrades.deployProxy(AJP) as AJP
+        if (!(await instance.isWhitelistMintPaused())) await instance.pauseWhitelistMint()
+
+        // register whitelist
+        const whitelisted = [john, jonny, jonathan]
+        const leaves = whitelisted.map(account => keccak256(account.address))
+        const tree = new MerkleTree(leaves, keccak256, { sort: true })
+        const root = tree.getHexRoot()
+        await instance.setWhitelist(root)
+
+        // check balance to mint
+        const price: BigNumber = await instance.WHITELIST_PRICE()
+        const quantity: BigNumber = await instance.WHITELISTED_OWNER_MINT_LIMIT()
+        const totalPrice = price.mul(quantity)
+        const balance = await jonathan.getBalance()
+        expect(balance.gte(totalPrice)).is.true
+
+        const proofOfJonathan = tree.getHexProof(keccak256(jonathan.address))
+        await expect(instance.connect(jonathan).whitelistMint(quantity, false, proofOfJonathan, { value: totalPrice })).to.revertedWith("whitelist mint: paused")
     })
 })

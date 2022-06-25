@@ -46,7 +46,9 @@ contract AJP is
 
         baseURI = "https://animjpnfttest.s3.amazonaws.com/";
         mintLimit = 9_999;
-        pauseMintFlags = PAUSE_PUBLIC_MINT_FLAG & PAUSE_WHITELIST_MINT_FLAG;
+        isChiefMintPaused = false;
+        isPublicMintPaused = true;
+        isWhitelistMintPaused = true;
         _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
         _royaltyFraction = 1_000; // 10%
     }
@@ -293,39 +295,36 @@ contract AJP is
     //// Pausing
     ///////////////////////////////////////////////////////////////////
 
-    event PausingStatusChanged(uint8 status);
-
-    uint8 public constant PAUSE_CHIEF_MINT_FLAG = 1**0;
-    uint8 public constant PAUSE_PUBLIC_MINT_FLAG = 1**1;
-    uint8 public constant PAUSE_WHITELIST_MINT_FLAG = 1**2;
-
-    uint8 public pauseMintFlags;
+    event ChiefMintPaused();
+    event ChiefMintUnpaused();
+    event PublicMintPaused();
+    event PublicMintUnpaused();
+    event WhitelistMintPaused();
+    event WhitelistMintUnpaused();
 
     //////////////////////////////////
     //// Chief Mint
     //////////////////////////////////
 
     function pauseChiefMint() external onlyOwner whenChiefMintNotPaused {
-        pauseMintFlags |= PAUSE_CHIEF_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isChiefMintPaused = true;
+        emit ChiefMintPaused();
     }
 
     function unpauseChiefMint() external onlyOwner whenChiefMintPaused {
-        pauseMintFlags ^= PAUSE_CHIEF_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isChiefMintPaused = false;
+        emit ChiefMintUnpaused();
     }
 
-    function isChiefMintPaused() public view returns (bool) {
-        return pauseMintFlags & PAUSE_CHIEF_MINT_FLAG != 0;
-    }
+    bool public isChiefMintPaused;
 
     modifier whenChiefMintNotPaused() {
-        require(!isChiefMintPaused(), "chief mint: paused");
+        require(!isChiefMintPaused, "chief mint: paused");
         _;
     }
 
     modifier whenChiefMintPaused() {
-        require(isChiefMintPaused(), "chief mint: not paused");
+        require(isChiefMintPaused, "chief mint: not paused");
         _;
     }
 
@@ -334,26 +333,24 @@ contract AJP is
     //////////////////////////////////
 
     function pausePublicMint() external onlyOwner whenPublicMintNotPaused {
-        pauseMintFlags |= PAUSE_PUBLIC_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isPublicMintPaused = true;
+        emit PublicMintPaused();
     }
 
     function unpausePublicMint() external onlyOwner whenPublicMintPaused {
-        pauseMintFlags ^= PAUSE_PUBLIC_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isPublicMintPaused = false;
+        emit PublicMintUnpaused();
     }
 
-    function isPublicMintPaused() public view returns (bool) {
-        return pauseMintFlags & PAUSE_PUBLIC_MINT_FLAG != 0;
-    }
+    bool public isPublicMintPaused;
 
     modifier whenPublicMintNotPaused() {
-        require(!isPublicMintPaused(), "public mint: paused");
+        require(!isPublicMintPaused, "public mint: paused");
         _;
     }
 
     modifier whenPublicMintPaused() {
-        require(isPublicMintPaused(), "public mint: not paused");
+        require(isPublicMintPaused, "public mint: not paused");
         _;
     }
 
@@ -362,26 +359,24 @@ contract AJP is
     //////////////////////////////////
 
     function pauseWhitelistMint() external onlyOwner whenWhitelistMintNotPaused {
-        pauseMintFlags |= PAUSE_WHITELIST_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isWhitelistMintPaused = true;
+        emit WhitelistMintPaused();
     }
 
     function unpauseWhitelistMint() external onlyOwner whenWhitelistMintPaused {
-        pauseMintFlags ^= PAUSE_WHITELIST_MINT_FLAG;
-        emit PausingStatusChanged(pauseMintFlags);
+        isWhitelistMintPaused = false;
+        emit WhitelistMintUnpaused();
     }
 
-    function isWhitelistMintPaused() public view returns (bool) {
-        return pauseMintFlags & PAUSE_WHITELIST_MINT_FLAG != 0;
-    }
+    bool public isWhitelistMintPaused;
 
     modifier whenWhitelistMintNotPaused() {
-        require(!isWhitelistMintPaused(), "whitelist mint: paused");
+        require(!isWhitelistMintPaused, "whitelist mint: paused");
         _;
     }
 
     modifier whenWhitelistMintPaused() {
-        require(isWhitelistMintPaused(), "whitelist mint: not paused");
+        require(isWhitelistMintPaused, "whitelist mint: not paused");
         _;
     }
 

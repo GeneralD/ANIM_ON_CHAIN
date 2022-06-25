@@ -11,7 +11,6 @@ describe("Upgrade AJP", () => {
 
         await instance.setBaseURI("https://test.com/")
         await instance.setMintLimit(300)
-        await instance.pause()
 
         const AJPTest1 = await ethers.getContractFactory("AJPTest1")
         const upgraded = await upgrades.upgradeProxy(instance, AJPTest1) as AJPTest1
@@ -19,7 +18,6 @@ describe("Upgrade AJP", () => {
 
         expect(await upgraded.baseURI()).to.equal("https://test.com/", "stored values should be kept beyond upgrade")
         expect(await upgraded.mintLimit()).to.equal(300, "stored values should be kept beyond upgrade")
-        expect(await upgraded.paused()).to.equal(true, "stored values should be kept beyond upgrade")
     })
 
     it("Upgrade then new field is not set", async () => {

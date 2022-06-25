@@ -13,6 +13,7 @@ describe("Mint AJP as whitelisted member", () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -42,6 +43,7 @@ describe("Mint AJP as whitelisted member", () => {
         const [, john, jonny, jonathan, mike] = await ethers.getSigners()
 
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -61,6 +63,7 @@ describe("Mint AJP as whitelisted member", () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]
@@ -94,6 +97,7 @@ describe("Mint AJP as whitelisted member", () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
         await instance.setMintLimit(10)
 
@@ -121,6 +125,7 @@ describe("Mint AJP as whitelisted member", () => {
         const [, john, jonny, jonathan] = await ethers.getSigners()
 
         const instance = await upgrades.deployProxy(AJP) as AJP
+        if (await instance.isWhitelistMintPaused()) await instance.unpauseWhitelistMint()
 
         // register whitelist
         const whitelisted = [john, jonny, jonathan]

@@ -18,7 +18,9 @@ contract AJPTest2 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
 
         baseURI = "https://anim.jp/nfts/";
         mintLimit = 9_999;
-        pauseMintFlags = 0;
+        isChiefMintPaused = false;
+        isPublicMintPaused = true;
+        isWhitelistMintPaused = true;
         newField = 555;
     }
 
@@ -31,16 +33,13 @@ contract AJPTest2 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
     }
 
     uint96 private _royaltyFraction;
-
     string public baseURI;
-
     uint256 public mintLimit;
-
     bytes32 private _chiefsMerkleRoot;
-
     bytes32 private _merkleRoot;
-
-    uint8 public pauseMintFlags;
+    bool public isChiefMintPaused;
+    bool public isPublicMintPaused;
+    bool public isWhitelistMintPaused;
 
     uint256 public newField;
 }
