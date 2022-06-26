@@ -1,6 +1,6 @@
 import { network, upgrades } from 'hardhat'
 
-import object from '../../.openzeppelin/goerli.json'
+import object from '../../.openzeppelin/rinkeby.json'
 import config from '../../hardhat.config'
 
 type Json = typeof object

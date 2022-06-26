@@ -1,20 +1,20 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x4f1ba016d6E2fD1653799d8Dda3630E0dCEe88ED",
-    "txHash": "0x14f5ad62bbe93bbc0850fc7fcd1053aa4158960e6dc1f13616d5eeecf33fecb3"
+    "address": "0x53ba1cDd9DdFc864d12028c1009c775de99a3d86",
+    "txHash": "0xeef084c45ff6db5a53cdef88d8c554e1f20f082de313e7210d58af1c5e9d16ea"
   },
   "proxies": [
     {
-      "address": "0x963C8aB364C0f089C01b2B18871cfBcf013e5C2B",
-      "txHash": "0x92505f223b9f992791a02ab63bd36576f6c79ccf1faf7dd0f75a2e728ebe1f98",
+      "address": "0x49F6DBBdc86A676F6Ed6D2bB6D105d1bB3aedeC1",
+      "txHash": "0x6f12b59b6b38ed5667550f9a9bf86cd29caed62c84d104a3d59fc6ec65b295c1",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "0e0d940051cbeea79753b789ebaa20723f5bc2692e5b0dc773854b72265715b3": {
-      "address": "0x8B7aB8525b8e4E5964220BF7393EF7159C7c6F01",
-      "txHash": "0x6b42dca67bf36783107aef4f8abebeaebbf1c977aa2d4d13f6f7963a11ea7915",
+    "047d2cb7d4e364344e30941650bbf76b4f04d80af014a13eb3c3d171e49b733d": {
+      "address": "0xd6f163861F86Fe3de56c2CE7dB61709ce0Ba7563",
+      "txHash": "0x1f4a7dd3ec34d0e86d5babe4fd7f6a5c7b62155e584b77f83b4c9dbb7c7ad21a",
       "layout": {
         "storage": [
           {
@@ -72,7 +72,7 @@
             "slot": "102",
             "type": "t_string_storage",
             "contract": "AJP",
-            "src": "contracts/AJP.sol:117"
+            "src": "contracts/AJP.sol:128"
           },
           {
             "label": "mintLimit",
@@ -80,7 +80,7 @@
             "slot": "103",
             "type": "t_uint256",
             "contract": "AJP",
-            "src": "contracts/AJP.sol:210"
+            "src": "contracts/AJP.sol:233"
           },
           {
             "label": "_chiefsMerkleRoot",
@@ -88,7 +88,7 @@
             "slot": "104",
             "type": "t_bytes32",
             "contract": "AJP",
-            "src": "contracts/AJP.sol:233"
+            "src": "contracts/AJP.sol:256"
           },
           {
             "label": "_merkleRoot",
@@ -96,15 +96,31 @@
             "slot": "105",
             "type": "t_bytes32",
             "contract": "AJP",
-            "src": "contracts/AJP.sol:255"
+            "src": "contracts/AJP.sol:279"
           },
           {
-            "label": "paused",
+            "label": "isChiefMintPaused",
             "offset": 0,
             "slot": "106",
             "type": "t_bool",
             "contract": "AJP",
-            "src": "contracts/AJP.sol:308"
+            "src": "contracts/AJP.sol:350"
+          },
+          {
+            "label": "isPublicMintPaused",
+            "offset": 1,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:376"
+          },
+          {
+            "label": "isWhitelistMintPaused",
+            "offset": 2,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:396"
           }
         ],
         "types": {

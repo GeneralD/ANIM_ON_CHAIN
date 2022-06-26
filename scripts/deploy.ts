@@ -1,10 +1,11 @@
 import { keccak256 } from 'ethers/lib/utils'
-import { ethers, upgrades } from 'hardhat'
+import { ethers, network, run, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 
 import { AJP } from '../typechain'
 import { isProxyDeployed } from './utils/deployedProxy'
 import { chiefAddresses, whitelistedAddresses } from './utils/envs'
+import { verifyEtherscan } from './utils/verify'
 
 async function main() {
   if (await isProxyDeployed()) throw Error("Proxy has already been deployed! 'Upgrade' instead.")
@@ -14,10 +15,12 @@ async function main() {
   const AJP = await ethers.getContractFactory("AJP")
   const instance = await upgrades.deployProxy(AJP) as AJP
   await instance.deployed()
-  console.log("AJP deployed to:", instance.address)
+  console.log("proxy deployed to: ", instance.address)
 
   await instance.setChiefList(createMerkleRoot(chiefAddresses))
   await instance.setWhitelist(createMerkleRoot(whitelistedAddresses))
+
+  await verifyEtherscan(instance.address)
 }
 
 function createMerkleRoot(addresses: string[]) {
