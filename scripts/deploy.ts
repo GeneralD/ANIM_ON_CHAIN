@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethers/lib/utils'
-import { ethers, network, run, upgrades } from 'hardhat'
+import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 
 import { AJP } from '../typechain'

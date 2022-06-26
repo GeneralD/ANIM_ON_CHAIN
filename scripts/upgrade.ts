@@ -1,4 +1,4 @@
-import { ethers, network, run, upgrades } from 'hardhat'
+import { ethers, upgrades } from 'hardhat'
 
 import { AJP } from '../typechain'
 import { deployedProxy } from './utils/deployedProxy'
