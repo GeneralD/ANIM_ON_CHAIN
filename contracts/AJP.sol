@@ -49,7 +49,6 @@ contract AJP is
         isChiefMintPaused = false;
         isPublicMintPaused = true;
         isWhitelistMintPaused = true;
-        _chiefsMerkleRoot = 0xf198ec498ae3bd680754a0cbbe33425c440643fe06c88ec88a85620c87a60f1b;
         _royaltyFraction = 1_000; // 10%
     }
 
