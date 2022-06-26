@@ -19,8 +19,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 })
 
-const accounts = process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []
-
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 const config: HardhatUserConfig = {
@@ -37,13 +35,17 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 1337,
     },
+    mainnet: {
+      url: process.env.MAINNET_URL || "",
+      accounts: process.env.DEPROY_WALLET_PRIVATE_KEY !== undefined ? [process.env.DEPROY_WALLET_PRIVATE_KEY] : [],
+    },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
-      accounts: accounts,
+      accounts: process.env.TEST_WALLET_PRIVATE_KEY !== undefined ? [process.env.TEST_WALLET_PRIVATE_KEY] : [],
     },
     goerli: {
       url: process.env.GOERLI_URL || "",
-      accounts: accounts,
+      accounts: process.env.TEST_WALLET_PRIVATE_KEY !== undefined ? [process.env.TEST_WALLET_PRIVATE_KEY] : [],
     }
   },
   gasReporter: {
