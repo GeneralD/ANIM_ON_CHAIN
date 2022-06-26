@@ -1,5 +1,4 @@
 import { expect } from 'chai'
-import { BigNumber } from 'ethers'
 import { keccak256, parseEther } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
@@ -33,6 +32,8 @@ describe("Mint AJP as whitelisted member", () => {
         const proof = tree.getHexProof(keccak256(john.address))
         await expect(await instance.connect(john).whitelistMint(quantity, true, proof, { value: totalPrice }))
             .to.changeEtherBalances([instance, john], [totalPrice, totalPrice.mul(-1)])
+
+        expect(await instance.numberWhitelistMinted(john.address)).to.equal(quantity)
 
         // greater than (or equals), because there may be some bonus
         expect((await instance.connect(john).balance()).gte(quantity)).is.true
@@ -73,8 +74,8 @@ describe("Mint AJP as whitelisted member", () => {
         await instance.setWhitelist(root)
 
         // check balance to mint
-        const price: BigNumber = await instance.WHITELIST_PRICE()
-        const quantity: BigNumber = await instance.WHITELISTED_OWNER_MINT_LIMIT()
+        const price = await instance.WHITELIST_PRICE()
+        const quantity = await instance.WHITELISTED_OWNER_MINT_LIMIT()
         const totalPrice = price.mul(quantity)
         const balance = await jonathan.getBalance()
         expect(balance.gte(totalPrice)).is.true
@@ -84,12 +85,16 @@ describe("Mint AJP as whitelisted member", () => {
         await expect(await instance.connect(jonathan).whitelistMint(quantity, false, proofOfJonathan, { value: totalPrice }))
             .to.changeEtherBalances([instance, jonathan], [totalPrice, totalPrice.mul(-1)])
 
+        expect(await instance.numberWhitelistMinted(jonathan.address)).to.equal(quantity)
+
         // try to mint more and fail
         await expect(instance.connect(jonathan).whitelistMint(quantity, false, proofOfJonathan, { value: totalPrice })).to.revertedWith("WL minting exceeds the limit")
 
         // but other guy is still ok
         const proofOfJonny = tree.getHexProof(keccak256(jonny.address))
         await instance.connect(jonny).whitelistMint(quantity, true, proofOfJonny, { value: totalPrice })
+
+        expect(await instance.numberWhitelistMinted(jonny.address)).to.equal(quantity)
     })
 
     it("Whitelisted member can mint in whitelist mint limit but not over the limit of entire contract", async () => {
@@ -109,8 +114,8 @@ describe("Mint AJP as whitelisted member", () => {
         await instance.setWhitelist(root)
 
         // check balance to mint
-        const price: BigNumber = await instance.WHITELIST_PRICE()
-        const quantity: BigNumber = await instance.WHITELISTED_OWNER_MINT_LIMIT()
+        const price = await instance.WHITELIST_PRICE()
+        const quantity = await instance.WHITELISTED_OWNER_MINT_LIMIT()
         const totalPrice = price.mul(quantity)
         const balance = await jonathan.getBalance()
         expect(balance.gte(totalPrice)).is.true
@@ -141,7 +146,7 @@ describe("Mint AJP as whitelisted member", () => {
         const balance = await john.getBalance()
         expect(balance.gte(totalPrice)).is.true
 
-        // mint
+        // try to mint without enough ETH
         const proof = tree.getHexProof(keccak256(john.address))
         const paid = totalPrice.mul(99).div(100)  // 99% of total price
         await expect(instance.connect(john).whitelistMint(quantity, true, proof, { value: paid })).to.revertedWith("not enough eth")

@@ -51,9 +51,13 @@ describe("AJP Chief Mint", () => {
             .to.emit(instance, "Transfer")
             .withArgs("0x0000000000000000000000000000000000000000", jonny.address, 10)
 
+        expect(await instance.numberChiefMinted(jonny.address)).to.equal(10)
+
         await expect(instance.connect(jonny).chiefMintTo(someone.address, 10, proof))
             .to.emit(instance, "Transfer")
             .withArgs("0x0000000000000000000000000000000000000000", someone.address, 20)
+
+        expect(await instance.numberChiefMinted(jonny.address)).to.equal(20)
     })
 
     it("Not Chief member can't mint", async () => {
