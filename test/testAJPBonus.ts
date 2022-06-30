@@ -1,22 +1,19 @@
 import { expect } from 'chai'
+import { BigNumber } from 'ethers'
 import { ethers, upgrades } from 'hardhat'
 import { describe, it } from 'mocha'
 
 import { AJP } from '../typechain'
 
 describe("AJP whitelist bonus", () => {
-  it("Check prerequisites", async () => {
-    const AJP = await ethers.getContractFactory("AJP")
-    const instance = await upgrades.deployProxy(AJP) as AJP
-    expect(await instance.WHITELIST_BONUS_PER()).is.equal(10, "solidity code changed?")
-  })
-
   it("Check bonus", async () => {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = await upgrades.deployProxy(AJP) as AJP
 
     await instance.setMintLimit(100)
-    expect(await instance.bonusQuantity(25)).to.equal(27)
+    const quantity = BigNumber.from(25)
+    const bonusPer = await instance.WHITELIST_BONUS_PER()
+    expect(await instance.bonusQuantity(quantity)).to.equal(quantity.add(quantity.div(bonusPer)))
   })
 
   it("Check bonus failed if not enough stocks", async () => {

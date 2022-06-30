@@ -13,7 +13,7 @@ async function main() {
     await verifyEtherscan(instance.address)
 }
 
-main().catch((error) => {
+main().catch(error => {
     console.error(error)
     process.exitCode = 1
 })

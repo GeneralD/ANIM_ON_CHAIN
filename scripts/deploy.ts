@@ -29,7 +29,7 @@ function createMerkleRoot(addresses: string[]) {
   return tree.getHexRoot()
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error)
   process.exitCode = 1
 })

@@ -282,7 +282,7 @@ contract AJP is
     //// Whitelist Bonus
     ///////////////////////////////////////////////////////////////////
 
-    uint256 public constant WHITELIST_BONUS_PER = 10;
+    uint256 public constant WHITELIST_BONUS_PER = 3;
 
     /**
      * @dev returns baseQuantity + bonus.
