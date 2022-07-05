@@ -1,11 +1,11 @@
 import { ethers } from 'hardhat'
 
-import { deployedProxy } from './utils/deployedProxy'
+import { deployedProxy } from './libs/deployedProxy'
 
 async function main() {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = AJP.attach((await deployedProxy()).address)
-    await instance.unpausePublicMint()
+    await instance.unpauseWhitelistMint()
 }
 
 main().catch(error => {

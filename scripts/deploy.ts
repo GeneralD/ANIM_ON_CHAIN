@@ -3,9 +3,9 @@ import { ethers, upgrades } from 'hardhat'
 import MerkleTree from 'merkletreejs'
 
 import { AJP } from '../typechain'
-import { isProxyDeployed } from './utils/deployedProxy'
-import { chiefAddresses, whitelistedAddresses } from './utils/envs'
-import { verifyEtherscan } from './utils/verify'
+import { isProxyDeployed } from './libs/deployedProxy'
+import { chiefAddresses, whitelistedAddresses } from './libs/envs'
+import { verifyEtherscan } from './libs/verify'
 
 async function main() {
   if (await isProxyDeployed()) throw Error("Proxy has already been deployed! 'Upgrade' instead.")

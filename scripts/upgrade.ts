@@ -1,8 +1,8 @@
 import { ethers, upgrades } from 'hardhat'
 
 import { AJP } from '../typechain'
-import { deployedProxy } from './utils/deployedProxy'
-import { verifyEtherscan } from './utils/verify'
+import { deployedProxy } from './libs/deployedProxy'
+import { verifyEtherscan } from './libs/verify'
 
 async function main() {
     const AJP = await ethers.getContractFactory("AJP")

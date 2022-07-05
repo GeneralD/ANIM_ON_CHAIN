@@ -1,6 +1,6 @@
 import { keccak256 } from 'ethers/lib/utils'
 
-import { whitelistedAddresses } from '../utils/envs'
+import { whitelistedAddresses } from '../libs/envs'
 
 async function main() {
     console.log(`const hashedWhitelistAddresses = [\n${whitelistedAddresses.map(keccak256).map(s => `    "${s}"`).join(",\n")}\n]`)
