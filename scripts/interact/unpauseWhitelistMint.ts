@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat'
 
-import { deployedProxy } from './libs/deployedProxy'
+import { deployedProxy } from '../libs/deployedProxy'
 
 async function main() {
     const AJP = await ethers.getContractFactory("AJP")
