@@ -1,8 +1,7 @@
-import { keccak256 } from 'ethers/lib/utils'
 import { ethers, upgrades } from 'hardhat'
-import MerkleTree from 'merkletreejs'
 
 import { AJP } from '../typechain'
+import { createMerkleRoot } from './libs/createMerkleRoot'
 import { isProxyDeployed } from './libs/deployedProxy'
 import { chiefAddresses, whitelistedAddresses } from './libs/envs'
 import { verifyEtherscan } from './libs/verify'
@@ -21,12 +20,6 @@ async function main() {
   await instance.setWhitelist(createMerkleRoot(whitelistedAddresses))
 
   await verifyEtherscan(instance.address)
-}
-
-function createMerkleRoot(addresses: string[]) {
-  const leaves = addresses.map(keccak256)
-  const tree = new MerkleTree(leaves, keccak256, { sort: true })
-  return tree.getHexRoot()
 }
 
 main().catch(error => {
