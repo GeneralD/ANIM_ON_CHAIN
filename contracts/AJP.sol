@@ -44,13 +44,12 @@ contract AJP is
         __ERC721AQueryable_init();
         __Ownable_init();
 
-        baseURI = "https://animjpnfttest.s3.amazonaws.com/";
+        baseURI = "https://animjp.s3.amazonaws.com/";
         mintLimit = 9_999;
         isChiefMintPaused = false;
         isPublicMintPaused = true;
         isWhitelistMintPaused = true;
         _royaltyFraction = 1_000; // 10%
-        _distributionRate = 1_000; // 10%
     }
 
     function _startTokenId() internal pure override returns (uint256) {
