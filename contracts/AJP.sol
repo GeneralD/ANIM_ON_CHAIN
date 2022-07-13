@@ -50,6 +50,7 @@ contract AJP is
         isPublicMintPaused = true;
         isWhitelistMintPaused = true;
         _royaltyFraction = 1_000; // 10%
+        _distributionRate = 1_000; // 10%
     }
 
     function _startTokenId() internal pure override returns (uint256) {
@@ -427,10 +428,38 @@ contract AJP is
     //// Withdraw
     ///////////////////////////////////////////////////////////////////
 
-    // TODO: divide money peacefully
+    address[] private _distributees;
+    uint256 private _distributionRate;
+
+    /**
+     * @dev configure distribution settings.
+     * max distributionRate should be 10_000 and it means 100% balance of this contract.
+     * e.g. set 500 to deposit 5% to every distributee.
+     */
+    function setDistribution(address[] calldata distributees, uint256 distributionRate) external onlyOwner {
+        require(distributionRate * distributees.length <= 10_000, "too much distribution rate");
+        _distributees = distributees;
+        _distributionRate = distributionRate;
+    }
+
+    function getDistribution()
+        external
+        view
+        onlyOwner
+        returns (address[] memory distributees, uint256 distributionRate)
+    {
+        distributees = _distributees;
+        distributionRate = _distributionRate;
+    }
+
     function withdraw() external onlyOwner {
         uint256 amount = address(this).balance;
-        payable(msg.sender).transfer(amount);
+        uint256 distribution = (amount * _distributionRate) / 10_000;
+        for (uint256 index = 0; index < _distributees.length; index++) {
+            payable(_distributees[index]).transfer(distribution);
+        }
+        uint256 amountLeft = amount - distribution * _distributees.length;
+        payable(msg.sender).transfer(amountLeft);
     }
 
     ///////////////////////////////////////////////////////////////////

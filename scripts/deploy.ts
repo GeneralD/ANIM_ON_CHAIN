@@ -18,6 +18,7 @@ async function main() {
 
   await instance.setChiefList(createMerkleRoot(chiefAddresses))
   await instance.setWhitelist(createMerkleRoot(whitelistedAddresses))
+  await instance.setDistribution(chiefAddresses, 1_000)
 
   await verifyEtherscan(instance.address)
 }

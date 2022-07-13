@@ -41,5 +41,8 @@ contract AJPTest2 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
     bool public isPublicMintPaused;
     bool public isWhitelistMintPaused;
 
+    address[] private _distributees;
+    uint256 private _distributionRate;
+
     uint256 public newField;
 }

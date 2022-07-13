@@ -36,6 +36,9 @@ contract AJPTest1 is ERC721AUpgradeable, ERC721ABurnableUpgradeable, ERC721AQuer
     bool public isPublicMintPaused;
     bool public isWhitelistMintPaused;
 
+    address[] private _distributees;
+    uint256 private _distributionRate;
+
     function withdraw() external onlyOwner {
         uint256 amount = address(this).balance;
         payable(msg.sender).transfer(amount);
