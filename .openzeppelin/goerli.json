@@ -9,6 +9,21 @@
       "address": "0x49F6DBBdc86A676F6Ed6D2bB6D105d1bB3aedeC1",
       "txHash": "0x6f12b59b6b38ed5667550f9a9bf86cd29caed62c84d104a3d59fc6ec65b295c1",
       "kind": "transparent"
+    },
+    {
+      "address": "0x114AA703013CAfD275DAF6aAf8AF6f317b674eD0",
+      "txHash": "0x20297b25ef9d2feac4653613a276b3e0cee59af9097e734eb4261cda32459969",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x20C82BB6cb94d22F4f1588074BF834ECE495a702",
+      "txHash": "0x332961002daa8de08f7281d0b6193a121b1d18bc88ccea5241077527ad319857",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x13892541CCdC33208e3CD21d22F1Fd278E5326F1",
+      "txHash": "0xdbef5c96660a02eaaf06b962e4b28893956acc6764722b35da77e80005f6120e",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -278,6 +293,177 @@
           "t_address": {
             "label": "address",
             "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "9f58cfbd4de5f59c8dd6d7ed9a7b58cebb69943fa994a5c45f500b03896f8f11": {
+      "address": "0xA4Eaf3b939508a078a681Ff4Dde3e0913431E08f",
+      "txHash": "0x31f87ad445f20805575d8e38c1cd3c9d8dd59670e68cdcb34a136bfefd4929fb",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_royaltyFraction",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint96",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:94"
+          },
+          {
+            "label": "baseURI",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_string_storage",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:128"
+          },
+          {
+            "label": "mintLimit",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_uint256",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:233"
+          },
+          {
+            "label": "_chiefsMerkleRoot",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_bytes32",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:256"
+          },
+          {
+            "label": "_merkleRoot",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_bytes32",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:279"
+          },
+          {
+            "label": "isChiefMintPaused",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:350"
+          },
+          {
+            "label": "isPublicMintPaused",
+            "offset": 1,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:376"
+          },
+          {
+            "label": "isWhitelistMintPaused",
+            "offset": 2,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:396"
+          },
+          {
+            "label": "_distributees",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:448"
+          },
+          {
+            "label": "_distributionRate",
+            "offset": 0,
+            "slot": "108",
+            "type": "t_uint256",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:450"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
           },
           "t_array(t_uint256)49_storage": {
             "label": "uint256[49]",
