@@ -1,0 +1,187 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x7aeE84c259c191bC48A7864cB53388F3EB0a0497",
+    "txHash": "0xc4a2ff8952f3ccc52b60e84ff2f45b1b886ea9becd5d0ba842934b7aa31d9d63"
+  },
+  "proxies": [
+    {
+      "address": "0x8F2ceF1CBFF23d7D657DDbaE39650Bb860e87132",
+      "txHash": "0x990958de1e3dea9659cc359402c2f9216eeeccc70caf1655c63038bcd2e0df27",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "9f58cfbd4de5f59c8dd6d7ed9a7b58cebb69943fa994a5c45f500b03896f8f11": {
+      "address": "0x29839e3058698B10D2b38f1e44B3aB5637b7F943",
+      "txHash": "0xed211d09cd4432d43de07db827dcca9c57db10478c3c5287e2faa879ec729be7",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_royaltyFraction",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint96",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:94"
+          },
+          {
+            "label": "baseURI",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_string_storage",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:128"
+          },
+          {
+            "label": "mintLimit",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_uint256",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:233"
+          },
+          {
+            "label": "_chiefsMerkleRoot",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_bytes32",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:256"
+          },
+          {
+            "label": "_merkleRoot",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_bytes32",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:279"
+          },
+          {
+            "label": "isChiefMintPaused",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:350"
+          },
+          {
+            "label": "isPublicMintPaused",
+            "offset": 1,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:376"
+          },
+          {
+            "label": "isWhitelistMintPaused",
+            "offset": 2,
+            "slot": "106",
+            "type": "t_bool",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:396"
+          },
+          {
+            "label": "_distributees",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:448"
+          },
+          {
+            "label": "_distributionRate",
+            "offset": 0,
+            "slot": "108",
+            "type": "t_uint256",
+            "contract": "AJP",
+            "src": "contracts/AJP.sol:450"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    }
+  }
+}
