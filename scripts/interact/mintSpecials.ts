@@ -18,10 +18,8 @@ async function main() {
         return
     }
 
-    for (let index = 0; index < addresses.length; index++) {
-        const address = addresses[index]
+    for (const address of addresses)
         await instance.adminMintTo(address, 1)
-    }
 
     console.log(`totalSupply: ${await instance.totalSupply()}`)
 }
