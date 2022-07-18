@@ -4,7 +4,6 @@ import { AJP } from '../typechain'
 import { createMerkleRoot } from './libs/createMerkleRoot'
 import { isProxyDeployed } from './libs/deployedProxy'
 import { chiefAddresses } from './libs/envs'
-import { verifyEtherscan } from './libs/verify'
 
 async function main() {
   if (await isProxyDeployed()) throw Error("Proxy has already been deployed! 'Upgrade' instead.")
@@ -20,8 +19,6 @@ async function main() {
 
   await instance.setChiefList(createMerkleRoot(chiefAddresses))
   await instance.setDistribution(chiefAddresses, 1_000)
-
-  await verifyEtherscan(instance.address)
 }
 
 main().catch(error => {
