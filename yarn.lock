@@ -927,6 +927,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/chai-arrays@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/chai-arrays/-/chai-arrays-2.0.0.tgz#89faf96a5971e3b16d82c3afc07e1d84ecc4a360"
+  integrity sha512-5h5jnAC9C64YnD7WJpA5gBG7CppF/QmoWytOssJ6ysENllW49NBdpsTx6uuIBOpnzAnXThb8jBICgB62wezTLQ==
+  dependencies:
+    "@types/chai" "*"
+
 "@types/chai-string@^1.4.2":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@types/chai-string/-/chai-string-1.4.2.tgz#0f116504a666b6c6a3c42becf86634316c9a19ac"
@@ -2554,6 +2561,11 @@ cbor@^8.0.0:
   integrity sha512-DwGjNW9omn6EwP70aXsn7FQJx5kO12tX0bZkaTjzdVFM6/7nhA4t0EENocKGx6D2Bch9PE2KzCUf5SceBdeijg==
   dependencies:
     nofilter "^3.1.0"
+
+chai-arrays@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/chai-arrays/-/chai-arrays-2.2.0.tgz#571479cbc5eca81605ed4eed1e8a2a28552d2a25"
+  integrity sha512-4awrdGI2EH8owJ9I58PXwG4N56/FiM8bsn4CVSNEgr4GKAM6Kq5JPVApUbhUBjDakbZNuRvV7quRSC38PWq/tg==
 
 chai-bignumber@^3.0.0:
   version "3.0.0"
