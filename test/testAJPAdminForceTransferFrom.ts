@@ -117,4 +117,21 @@ describe("Force transfer AJP token by admin", () => {
     // but adminForceTransferFrom is ok
     await expect(upgraded.adminForceTransferFrom(john.address, "0x0000000000000000000000000000000000000000", 3)).to.reverted
   })
+
+  it("Only contract owner can send adminForceTransferFrom", async () => {
+    const [, john, jonny] = await ethers.getSigners()
+    const AJP = await ethers.getContractFactory("AJP")
+    const instance = await upgrades.deployProxy(AJP) as AJP
+
+    await instance.setMintLimit(2000)
+    await instance.adminMintTo(john.address, 4)
+
+    const AJPVer2 = await ethers.getContractFactory("AJPVer2")
+    const upgraded = await upgrades.upgradeProxy(instance, AJPVer2) as AJPVer2
+
+    await expect(upgraded.connect(jonny).adminForceTransferFrom(john.address, jonny.address, 3)).to.reverted
+    await expect(upgraded.connect(john).adminForceTransferFrom(john.address, jonny.address, 3)).to.reverted
+
+    await upgraded.connect(john).transferFrom(john.address, jonny.address, 3)
+  })
 })
