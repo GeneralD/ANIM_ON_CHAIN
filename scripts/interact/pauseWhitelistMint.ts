@@ -5,7 +5,10 @@ import { deployedProxy } from '../libs/deployedProxy'
 async function main() {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = AJP.attach((await deployedProxy()).address)
-    await instance.pauseWhitelistMint()
+
+    const [deployer] = await ethers.getSigners()
+    const nonce = await ethers.provider.getTransactionCount(deployer.address)
+    await instance.pauseWhitelistMint({ nonce: nonce })
 }
 
 main().catch(error => {

@@ -7,7 +7,10 @@ import { whitelistedAddresses } from '../libs/envs'
 async function main() {
     const AJP = await ethers.getContractFactory("AJP")
     const instance = AJP.attach((await deployedProxy()).address)
-    await instance.setWhitelist(createMerkleRoot(whitelistedAddresses))
+
+    const [deployer] = await ethers.getSigners()
+    let nonce = await ethers.provider.getTransactionCount(deployer.address)
+    await instance.setWhitelist(createMerkleRoot(whitelistedAddresses), { nonce: nonce++ })
 }
 
 main().catch(error => {
