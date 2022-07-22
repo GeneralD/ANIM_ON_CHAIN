@@ -197,6 +197,7 @@ contract AJPVer2 is
     //// Admin Mint
     //////////////////////////////////
 
+    // TODO: Remove payable in next version
     function adminMint(uint256 quantity) external payable onlyOwner checkMintLimit(quantity) {
         _mint(msg.sender, quantity);
     }
